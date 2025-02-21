@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - '*'
+      - '*/*'
 
 jobs:
   build:
@@ -12,21 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
           fetch-depth: 0
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.MIRROR_TOKEN }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
+          token: ${{ secrets.TOKEN_GITHUB }}
       - name: Commit files
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout $CI_COMMIT_REF_NAME
-          git push --repo="git@github.com:EpitechMscProPromo2025/T-SEC-902-TLS_1.git" --force
+          git push --force https://github.com/EpitechMscProPromo2025/T-SEC-902-TLS_1.git $CI_COMMIT_REF_NAME
+        env:
+          CI_COMMIT_REF_NAME: ${{ github.ref }}
 
       # - name: Push Wiki
       #   run: |
@@ -34,4 +30,3 @@ jobs:
       #     cd wiki
       #     git remote add epitech "git@github.com:EpitechMscProPromo2025/T-SEC-902-TLS_1.wiki.git"
       #     git push epitech --force
-
