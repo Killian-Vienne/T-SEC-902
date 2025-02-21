@@ -24,32 +24,9 @@ jobs:
         env:
           CI_COMMIT_REF_NAME: ${{ github.ref }}
 
-  update-wiki:
-    if: github.repository == 'Killian-Vienne/T-SEC-902'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.TOKEN_GITHUB }}
-      - name: Checkout Wiki
-        uses: actions/checkout@v4
-        with:
-          repository: Killian-Vienne/T-SEC-902.wiki
-          token: ${{ secrets.TOKEN_GITHUB }}
-          path: wiki
-      - name: Update Wiki
+      - name: Push Wiki
         run: |
+          git clone "https://github.com/Killian-Vienne/T-SEC-902.wiki.git" wiki
           cd wiki
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          # Add your commands here to update the wiki content
-          git add .
-          git commit -m "Update wiki content"
-          git push origin main
-      # - name: Push Wiki
-      #   run: |
-      #     git clone "https://github.com/EpitechMscProPromo2025/T-SEC-902.wiki.git" wiki
-      #     cd wiki
-      #     git remote add epitech "https://github.com/EpitechMscProPromo2025/T-SEC-902-TLS_1.wiki.git"
-      #     git push epitech --force
+          git remote add epitech "https://github.com/EpitechMscProPromo2025/T-SEC-902-TLS_1.wiki.git"
+          git push epitech --force
