@@ -28,5 +28,5 @@ jobs:
         run: |
           git clone "git@github.com:Killian-Vienne/T-SEC-902.wiki.git" wiki
           cd wiki
-          git remote add epitech "git@github.com:EpitechMscProPromo2025/T-SEC-902-TLS_1.wiki.git"
+          git remote add epitech "https://github.com/EpitechMscProPromo2025/T-SEC-902-TLS_1.wiki.git"
           git push epitech --force
