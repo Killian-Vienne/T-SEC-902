@@ -8,11 +8,13 @@ Cela nécessite de déployer et maintenir effectif le firewall
 1. Strengthen Arasaka’s Defenses
 ```
 - La sécurisation des ports, les grader fermé si inutile etc... | Monitoring des ports ouvert et ainsi du trafic
+- mise a jour des packages, failles, etc...
 ```
 
 2. Suspicious movements from Pacifica and other high-risk areas
 ```
 - Filtrage du traffic sortant/entrant : Stratégie Zero Trust/Default Deny
+-
 ```
 
 3. Limiting the flow of connections to protect the digital bastion
@@ -28,6 +30,7 @@ Cela nécessite de déployer et maintenir effectif le firewall
 5. Detect hidden transmissions in the information flow
 ```
 - Detect hidden transmissions in the information flow
+- voir si pfsence peut faire du man in the middle pour analyser le traffic
 ```
 
 6. Limit external access to Arasaka’s eyes only
@@ -43,6 +46,7 @@ Cela nécessite de déployer et maintenir effectif le firewall
 8. Keeping out non-Arasaka-approved tools
 ```
 - Analyse de tout les PC ou machines afin de détecter des logiciel malveillant ou non voulu a l'installation, seulement des logiciel qui sont officialisé par Arasaka
+
 ```
 
 9. Monitor outgoing traffic to identify traitors
@@ -62,7 +66,7 @@ Cela nécessite de déployer et maintenir effectif le firewall
 4. Implementation of the firewall and the WAF within Arasaka’s Network.
 5. A security audit of your network after it has been secured.
 
-# A propos du Firewall : 
+# A propos du Firewall :
 Utiliser le firewall pfSense. Pour ce faire utiliser des ressources terraform, crée une vm et utilisé ansible dans celle ci pour installer le firewall
 
 use the terraform resource provided,
@@ -73,3 +77,4 @@ create a new vm in it and use Ansible to install your firewall.
 1. On peux utiliser ModSecurity afin d'accomplir la 'WAF Task'
 2. Toutes les livraisons devront être en anglais
 
+CertFr --> permet de remonter des alertes si des mots clé sont présent dans internet ou des leak
