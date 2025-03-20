@@ -6,6 +6,8 @@
 
 ### Install (Windows)
 
+For windows users, to install 
+
 ### [Install (Linux)](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt)
 
 For Linux mint or other distrib not listed by microsoft at the step ```Install Azure CLI``` on [How to install azure cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt), you need to look the version of ur distrib:
@@ -55,6 +57,13 @@ Terraform Cloud Platform will allow to store the Terraform State in order to hav
 2. Place Terraform executable file into your folder containing terraform module.
 
 ### [Install terraform (Windows)](https://developer.hashicorp.com/terraform/install?product_intent=terraform#windows)
+
+1. Go to the [Terraform tutorial](https://developer.hashicorp.com/terraform/install#windows)
+2. Click on "Download" under : "AMD64 Version: 1.11.0"
+3. Unzip Terraform into a desired location.
+4. Open your environment path => "Windows + r" and enter : C:\Windows\System32\systempropertiesadvanced.exe
+5. Click on "Environment variables"
+6. Click on "Path" then "modify" and add a new path (the path to add is the desired location from step 2), for exemple : C:\terraform_1.10.5_windows_amd64
 
 ### Configure Terraform Cloud Plateform
 
