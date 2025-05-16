@@ -36,7 +36,7 @@ result:
 this will execute a guide into the terminal and set up your account by oauth.
 after connections set up, the terminal will invite you to chose the subscription.
 
-select by nuber the subsciption and all done for Azure CLI set-up.
+select by number the subsciption and all done for Azure CLI set-up.
 
 ## Set up Terraform Cloud Plateform
 

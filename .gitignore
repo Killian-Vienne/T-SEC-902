@@ -44,4 +44,4 @@ scripts
 private
 claude_context_files
 **.old
-
+*.vhd
