@@ -77,32 +77,53 @@ N'oubliez pas de vérifier également que le service SSH est activé dans "Syste
 
 Veillez a désactiver l'IPv6 pour l'interface LAN dans "Interfaces" > "LAN" puis valider.
 
-Ajouter une règle pour le traffic entrant, pour cela allez dans Firewall > Rules puis sélectionnez l'onglet WAN. Cliquez sur Add pour ajouter une nouvelle règle
+Ajouter une règle pour le traffic entrant, pour cela allez dans Firewall > Rules puis sélectionnez l'onglet WAN. Cliquez sur Add pour ajouter une nouvelle règle :
+
 ```
-Pour HTTPS:
 * Action : Pass
 * Interface : WAN
 * Address Family : IPv4
-* Protocol : TCP
-* Source : any (ou limitez à votre IP pour plus de sécurité)
-* Destination : WAN address
-* Destination port range : HTTPS (443) (vous pouvez le sélectionner dans le menu déroulant)
-* Description : "Allow HTTPS access to pfSense Web Interface"
-* Cliquez sur Save
+* Protocol : Any
+* Source : any
+* Destination : This Firewall (self)
+* Description : ""
 ```
+
+Cliquez sur Save
+Cliquez à nouveau sur Add
+
 ```
-Pour SSH
-* Cliquez à nouveau sur Add
-* Action : Pass
+* Action : Block
 * Interface : WAN
 * Address Family : IPv4
 * Protocol : TCP
-* Source : any (ou limitez à votre IP pour plus de sécurité)
-* Destination : WAN address
-* Destination port range : SSH (22)
-* Description : "Allow SSH access to pfSense"
-* Cliquez sur Save
+* Source : any
+* Destination : Any
+* Description : "Block all on WAN"
 ```
+
+Cliquez sur Save
+
+Ajouter une règle de redirection des ports dans le menu "Firewall" > "NAT" > "Port Forward" :
+
+Port forward HTTP / HTTPS :
+```
+* Interface : WAN
+* Protocol : TCP
+* Redirect target IP : 10.0.1.20
+* Redirect target port : 80
+* Destination port range : 80
+* Description : "Port forward HTTP to GLPI"
+```
+```
+* Interface : WAN
+* Protocol : TCP
+* Redirect target IP : 10.0.1.20
+* Redirect target port : 443
+* Destination port range : 443
+* Description : "Port forward HTTPS to GLPI"
+```
+Laisse sur Add associated filter rule (ça va créer automatiquement la règle firewall qui va avec).
 
 ### Déploiement sur Azure
 
