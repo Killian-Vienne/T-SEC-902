@@ -2,8 +2,7 @@
 # This script establishes a secure tunnel to internal services
 # from your local machine through the bastion host
 
-# Replace these values with your actual bastion details
-BASTION_IP="20.185.233.187"
+BASTION_IP="20.172.128.68"
 BASTION_USER="adminuser"
 
 function show_help {
@@ -36,17 +35,17 @@ fi
 
 case $SERVICE in
   pfsense)
-    TARGET_HOST="10.0.1.4"  # pfSense LAN interface
+    TARGET_HOST="10.0.1.4"  # pfSense WAN interface
     TARGET_PORT="443"
     PROTOCOL="https"
     ;;
   wazuh)
-    TARGET_HOST="10.0.2.10"
-    TARGET_PORT="443"
-    PROTOCOL="https"
+    TARGET_HOST="10.0.1.30"
+    TARGET_PORT="3000"
+    PROTOCOL="http"
     ;;
   glpi)
-    TARGET_HOST="10.0.3.10"
+    TARGET_HOST="10.0.1.20"
     TARGET_PORT="443"
     PROTOCOL="https"
     ;;

@@ -40,7 +40,6 @@ terraform.rc
 testLab
 .env
 tfmod
-scripts
 private
 claude_context_files
 **.old
