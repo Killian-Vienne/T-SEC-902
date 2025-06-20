@@ -2,7 +2,7 @@
 # This script establishes a secure tunnel to internal services
 # from your local machine through the bastion host
 
-BASTION_IP="20.172.128.68"
+BASTION_IP="20.232.136.151"
 BASTION_USER="adminuser"
 
 function show_help {

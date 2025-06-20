@@ -2,7 +2,7 @@
 # This script establishes direct SSH connections to internal VMs
 # from your local machine through the bastion host
 
-BASTION_IP="20.172.128.68"
+BASTION_IP="20.232.136.151"
 BASTION_USER="adminuser"
 
 # Default SSH user for internal VMs
