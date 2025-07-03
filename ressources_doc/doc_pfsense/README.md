@@ -1,83 +1,83 @@
 # PfSense
 
-## C'est quoi ?
+## What is it?
 
-PfSense est un système d'exploitation open source basé sur FreeBSD, spécialement conçu pour fonctionner comme un pare-feu et un routeur. Il offre une solution complète de sécurité réseau avec des fonctionnalités avancées telles que :
+PfSense is an open source operating system based on FreeBSD, specifically designed to function as a firewall and router. It offers a complete network security solution with advanced features such as:
 
-- Pare-feu avec état (Stateful Firewall)
-- Routage et NAT
+- Stateful Firewall
+- Routing and NAT
 - VPN (IPSec, OpenVPN, WireGuard)
-- Filtrage de contenu
-- Équilibrage de charge
-- Surveillance du trafic
-- Authentification des utilisateurs
-- Protection contre les attaques DDoS
+- Content filtering
+- Load balancing
+- Traffic monitoring
+- User authentication
+- DDoS protection
 
-Sa popularité vient de sa stabilité, sa sécurité et sa facilité d'utilisation grâce à son interface web intuitive.
+Its popularity comes from its stability, security, and ease of use thanks to its intuitive web interface.
 
-## Création de l'image PfSense
+## Creating the PfSense Image
 
-1. Télécharger l'image officielle de [PfSense](https://www.pfsense.org/download/)
-2. Utiliser un outil de virtualisation (ex: VirtualBox)
+1. Download the official image from [PfSense](https://www.pfsense.org/download/)
+2. Use a virtualization tool (e.g., VirtualBox)
    ```
-   ATTENTION: Le disque dur virtuel créé doit être :
-        - au format VHD
-        - de taille fixe
+   WARNING: The virtual hard disk created must be:
+        - in VHD format
+        - fixed size
    ```
-3. Démarrer sur l'image précédemment téléchargée pour installer l'OS
-4. Effectuer un premier démarrage de la machine pour l'initialiser, en veillant à retirer correctement l'ISO d'installation
-5. Réaliser les premiers paramétrages de base
-6. Rendez-vous dans le répertoire de la VM puis copiez le VHD, cela est l'image qui sera utilisée pour Azure
+3. Boot from the previously downloaded image to install the OS
+4. Perform a first boot of the machine to initialize it, making sure to properly remove the installation ISO
+5. Perform basic initial configuration
+6. Go to the VM directory then copy the VHD, this is the image that will be used for Azure
 
-## Paramétrage
+## Configuration
 
-### Configuration de la VM
+### VM Configuration
 
-Une fois la première initialisation de la VM effectuée, il est nécessaire d'effectuer quelques opérations pour que l'image utilisée sur l'architecture Azure soit pleinement fonctionnelle.
+Once the first initialization of the VM is completed, it is necessary to perform some operations so that the image used on the Azure architecture is fully functional.
 
-#### Configuration du démarrage
+#### Boot Configuration
 
-Avant de continuer, il faudra créer un fichier nommé `loader.conf.local` afin de virtualiser un port physique pour communiquer avec la machine en entrée série.
+Before continuing, you will need to create a file named `loader.conf.local` to virtualize a physical port to communicate with the machine via serial input.
 
 ```sh
-# Configuration de la console série pour Azure
+# Serial console configuration for Azure
 boot.config="-S115200 -h"
 comconsole_speed="115200"
-comconsole_port="0x3F8"  # Adresse du port COM1
+comconsole_port="0x3F8"  # COM1 port address
 console="comconsole,vidconsole"
 boot_multicons="YES"
 boot_serial="YES"
 
-# Forcer la sortie du noyau vers la console série
-kern.cam.boot_delay=10000  # Donner plus de temps pour la détection des disques
-kern.hz="100"  # Recommandé pour les environnements virtuels
+# Force kernel output to serial console
+kern.cam.boot_delay=10000  # Give more time for disk detection
+kern.hz="100"  # Recommended for virtual environments
 
-# Paramètres spécifiques à Azure/Hyper-V
-hw.pci.enable_msix="0"  # Désactiver MSI-X qui peut causer des problèmes dans Hyper-V
-hw.pci.enable_msi="0"   # Désactiver MSI qui peut causer des problèmes dans Hyper-V
+# Azure/Hyper-V specific parameters
+hw.pci.enable_msix="0"  # Disable MSI-X which can cause problems in Hyper-V
+hw.pci.enable_msi="0"   # Disable MSI which can cause problems in Hyper-V
 ```
 
-Cette configuration sera très utile pour continuer la configuration de la machine une fois qu'elle sera déployée sur l'architecture Azure.
+This configuration will be very useful to continue configuring the machine once it is deployed on the Azure architecture.
 
-### Configuration du SSH
+### SSH Configuration
 
-Pour ajouter une clé publique SSH dans l'interface graphique de pfSense, voici la procédure à suivre :
+To add an SSH public key in the pfSense graphical interface, here is the procedure to follow:
 
-1. Connectez-vous à l'interface web de pfSense avec votre identifiant et mot de passe
-2. Allez dans le menu "System"
-3. Sélectionnez "User Manager"
-4. Recherchez l'utilisateur pour lequel vous souhaitez ajouter une clé SSH et cliquez sur l'icône de modification (crayon)
-5. Faites défiler vers le bas jusqu'à la section "Keys"
-6. Dans le champ "Authorized keys", collez votre clé publique SSH
-7. Cliquez sur "Save" pour valider les modifications
+1. Connect to the pfSense web interface with your username and password
+2. Go to the "System" menu
+3. Select "User Manager"
+4. Find the user for whom you want to add an SSH key and click on the edit icon (pencil)
+5. Scroll down to the "Keys" section
+6. In the "Authorized keys" field, paste your SSH public key
+7. Click "Save" to validate the changes
 
-Assurez-vous que votre clé publique SSH est au format correct (commence généralement par "ssh-rsa" ou "ssh-ed25519" suivi d'une longue chaîne de caractères).
+Make sure your SSH public key is in the correct format (usually starts with "ssh-rsa" or "ssh-ed25519" followed by a long string of characters).
 
-N'oubliez pas de vérifier également que le service SSH est activé dans "System" > "Advanced" > onglet "Admin Access" et que les règles de pare-feu permettent l'accès SSH. Vérifier également que le protocole web utilisé est HTTPS. Cliquez sur Save pour valider les modifications
+Don't forget to also check that the SSH service is enabled in "System" > "Advanced" > "Admin Access" tab and that firewall rules allow SSH access. Also verify that the web protocol used is HTTPS. Click Save to validate the changes
 
-Veillez a désactiver l'IPv6 pour l'interface LAN dans "Interfaces" > "LAN" puis valider.
+Make sure to disable IPv6 for the LAN interface in "Interfaces" > "LAN" then validate.
 
-Ajouter une règle pour le traffic entrant, pour cela allez dans Firewall > Rules puis sélectionnez l'onglet WAN. Cliquez sur Add pour ajouter une nouvelle règle :
+Add a rule for incoming traffic, for this go to Firewall > Rules then select the WAN tab. Click Add to add a new rule:
 
 ```
 * Action : Pass
@@ -89,8 +89,8 @@ Ajouter une règle pour le traffic entrant, pour cela allez dans Firewall > Rule
 * Description : ""
 ```
 
-Cliquez sur Save
-Cliquez à nouveau sur Add
+Click Save
+Click Add again
 
 ```
 * Action : Block
@@ -102,11 +102,11 @@ Cliquez à nouveau sur Add
 * Description : "Block all on WAN"
 ```
 
-Cliquez sur Save
+Click Save
 
-Ajouter une règle de redirection des ports dans le menu "Firewall" > "NAT" > "Port Forward" :
+Add a port forwarding rule in the "Firewall" > "NAT" > "Port Forward" menu:
 
-Port forward HTTP / HTTPS :
+HTTP / HTTPS port forward:
 ```
 * Interface : WAN
 * Protocol : TCP
@@ -123,15 +123,15 @@ Port forward HTTP / HTTPS :
 * Destination port range : 443
 * Description : "Port forward HTTPS to GLPI"
 ```
-Laisse sur Add associated filter rule (ça va créer automatiquement la règle firewall qui va avec).
+Leave "Add associated filter rule" checked (it will automatically create the corresponding firewall rule).
 
-### Déploiement sur Azure
+### Azure Deployment
 
-Lorsque la VM PfSense est déployée dans le cloud :
-1. Accédez à son interface de monitoring via Azure
-2. Rendez-vous dans le menu `Diagnostics de démarrage`
-3. allez dans les paramètres :
-   - Sélectionnez le bon compte de stockage
-   - Sauvegardez les modifications
+When the PfSense VM is deployed in the cloud:
+1. Access its monitoring interface via Azure
+2. Go to the `Boot Diagnostics` menu
+3. Go to settings:
+   - Select the correct storage account
+   - Save the changes
 
-À partir de maintenant, vous aurez accès à un terminal de votre VM via la console série. Vous en aurez besoin pour configurer les interfaces **WAN** et **LAN**.
+From now on, you will have access to a terminal of your VM via the serial console. You will need it to configure the **WAN** and **LAN** interfaces.

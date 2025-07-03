@@ -2,7 +2,7 @@
 
 ## Set up Azure CLI
 
-### Prérequis
+### Prerequisites
 
 ### Install (Windows)
 
@@ -42,7 +42,7 @@ select by number the subsciption and all done for Azure CLI set-up.
 
 Terraform Cloud Platform will allow to store the Terraform State in order to have a cleaner working environment within a team.
 
-### Prérequis
+### Prerequisites
 
 ```
 - Step Azure CLI
@@ -94,6 +94,21 @@ or
 ```sh
 rm terraform.tfstate
 ```
+
+## GRUB Security
+
+Steps to set a password on GRUB
+1. Generate an encrypted password for GRUB
+
+grub-mkpasswd-pbkdf2
+
+    It will ask you for a password and display output like:
+
+PBKDF2 hash of your password is grub.pbkdf2.sha512.10000.XXXXXX
+
+2. Copy the entire hash.
+
+3. Put the hash value in the local variable ```grub_password_hash```
 
 ## Lynis
 

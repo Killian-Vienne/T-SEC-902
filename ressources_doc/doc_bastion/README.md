@@ -2,62 +2,62 @@
 
 ## Introduction
 
-Le bastion est une machine intermédiaire, placée dans un sous-réseau sécurisé, qui sert de point d’accès unique pour administrer les autres machines de l’infrastructure.
-Il permet de renforcer la sécurité en évitant d’exposer directement les VMs internes (GLPI, Wazuh, etc.) à Internet.
+The bastion is an intermediate machine, placed in a secure subnet, that serves as a single access point to administer other machines in the infrastructure.
+It helps strengthen security by avoiding direct exposure of internal VMs (GLPI, Wazuh, etc.) to the Internet.
 
-## Rôle dans l’infrastructure
+## Role in the infrastructure
 
-- Point d’entrée sécurisé : Seule l’IP publique du bastion est exposée sur Internet.
-- Accès aux VMs internes : On se connecte d’abord au bastion, puis on rebondit vers les autres VMs (qui n’acceptent que des connexions SSH venant du bastion).
-- Filtrage réseau : Les règles de sécurité (NSG, pfSense) n’autorisent le SSH vers les VMs internes que depuis le bastion.
+- Secure entry point: Only the bastion's public IP is exposed on the Internet.
+- Access to internal VMs: You first connect to the bastion, then bounce to other VMs (which only accept SSH connections from the bastion).
+- Network filtering: Security rules (NSG, pfSense) only allow SSH to internal VMs from the bastion.
 
-## Connexion au bastion
+## Connecting to the bastion
 
-1. Connexion directe en SSH
-Pour te connecter directement au bastion depuis ta machine locale :
+1. Direct SSH connection
+To connect directly to the bastion from your local machine:
 
 ```sh
-ssh -i ~/.ssh/azure-ssh adminuser@<IP_PUBLIQUE_BASTION>
+ssh -i ~/.ssh/azure-ssh adminuser@<BASTION_PUBLIC_IP>
 ```
-2. Utilisation du script connect.sh
-Ce script (si présent dans ton projet) permet de simplifier la connexion SSH au bastion.
-Exemple d’utilisation :
+2. Using the connect.sh script
+This script (if present in your project) allows you to simplify SSH connection to the bastion.
+Usage example:
 
 ```sh
 ./connect.sh
 ```
-ou
+or
 
 ```sh
 ./connect.sh ~/.ssh/azure-ssh
 ```
 
-Le script utilise la clé SSH spécifiée (ou celle par défaut) pour ouvrir une session sur le bastion.
+The script uses the specified SSH key (or the default one) to open a session on the bastion.
 
-3. Utilisation du script ssh-connect.sh
+3. Using the ssh-connect.sh script
 
-Ce script permet de se connecter facilement à n’importe quelle VM interne via le bastion, ou d’exécuter une commande à distance.
+This script allows you to easily connect to any internal VM via the bastion, or execute a remote command.
 
-- Connexion à pfSense via le bastion :
+- Connect to pfSense via the bastion:
 ```sh
 ./ssh-connect.sh pfsense ~/.ssh/azure-ssh
 ```
 
-- Connexion à Wazuh via le bastion :
+- Connect to Wazuh via the bastion:
 ```sh
 ./ssh-connect.sh wazuh ~/.ssh/azure-ssh
 ```
 
-- Connexion à GLPI web via le bastion :
+- Connect to GLPI web via the bastion:
 ```sh
 ./ssh-connect.sh glpi-web ~/.ssh/azure-ssh
 ```
 
-- Exécution d’une commande sur une VM via le bastion :
+- Execute a command on a VM via the bastion:
 ```sh
 ./ssh-connect.sh glpi-web ~/.ssh/azure-ssh "cat /var/log/nginx/error.log"
 ```
 
 ```text
-[Votre PC] --(SSH)--> [Bastion] --(SSH interne)--> [VM interne (GLPI, Wazuh, etc.)]
+[Your PC] --(SSH)--> [Bastion] --(Internal SSH)--> [Internal VM (GLPI, Wazuh, etc.)]
 ```
