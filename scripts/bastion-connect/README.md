@@ -56,9 +56,9 @@ Where:
 
 Examples:
 ```bash
-./connect.sh pfsense 8443 ~/.ssh/id_rsa
-./connect.sh wazuh 8444 ~/.ssh/id_rsa
-./connect.sh glpi 8080 ~/.ssh/id_rsa
+./connect.sh pfsense 8443 ~/.ssh/azure-ssh
+./connect.sh wazuh 8444 ~/.ssh/azure-ssh
+./connect.sh glpi 8080 ~/.ssh/azure-ssh
 ```
 
 ### Direct SSH Connections
