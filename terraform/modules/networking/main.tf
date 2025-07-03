@@ -57,7 +57,7 @@ resource "azurerm_route" "route_public_default" {
 
 # Table de routage pour bastion - Accès direct à Internet
 resource "azurerm_route_table" "rt_bastion" {
-  name                = "rt-bastion" 
+  name                = "rt-bastion"
   location            = var.location
   resource_group_name = var.resource_group_name
 }
@@ -80,23 +80,41 @@ resource "azurerm_route" "route_bastion_internal" {
   next_hop_type       = "VnetLocal"
 }
 
-# Route interne pour LAN - Trafic interne directement via VNet
-resource "azurerm_route" "route_lan_internal" {
-  name                = "route-lan-internal"
+# COMMENTÉ : Route interne pour LAN - Pour forcer le passage par pfSense
+# resource "azurerm_route" "route_lan_internal" {
+#   name                = "route-lan-internal"
+#   resource_group_name = var.resource_group_name
+#   route_table_name    = azurerm_route_table.rt_lan.name
+#   address_prefix      = "10.0.0.0/16"
+#   next_hop_type       = "VnetLocal"
+# }
+
+# Route TOUT le trafic LAN via pfSense (y compris trafic interne)
+resource "azurerm_route" "route_lan_all_via_pfsense" {
+  name                = "route-lan-all-via-pfsense"
   resource_group_name = var.resource_group_name
   route_table_name    = azurerm_route_table.rt_lan.name
-  address_prefix      = "10.0.0.0/16"
+  address_prefix      = "0.0.0.0/0"  # TOUT le trafic
+  next_hop_type       = "VirtualAppliance"
+  next_hop_in_ip_address = "10.0.1.4" # IP LAN de pfSense
+}
+
+# Exception : Route pour que les VMs LAN puissent communiquer avec le bastion
+resource "azurerm_route" "route_lan_to_bastion" {
+  name                = "route-lan-to-bastion"
+  resource_group_name = var.resource_group_name
+  route_table_name    = azurerm_route_table.rt_lan.name
+  address_prefix      = "10.0.3.0/24"  # Bastion subnet
   next_hop_type       = "VnetLocal"
 }
 
-# Route par défaut pour LAN - Trafic externe via pfSense
-resource "azurerm_route" "route_lan_default" {
-  name                = "route-lan-external"
+# Exception : Route pour pfSense LAN vers le subnet public (WAN)
+resource "azurerm_route" "route_lan_to_public" {
+  name                = "route-lan-to-public"
   resource_group_name = var.resource_group_name
   route_table_name    = azurerm_route_table.rt_lan.name
-  address_prefix      = "0.0.0.0/0"
-  next_hop_type       = "VirtualAppliance"
-  next_hop_in_ip_address = "10.0.1.4" # IP LAN de pfSense
+  address_prefix      = "10.0.0.0/24"  # Public subnet
+  next_hop_type       = "VnetLocal"
 }
 
 # Route for bastion to LAN subnet - Ensure explicit route with high priority
@@ -114,15 +132,6 @@ resource "azurerm_route" "route_bastion_to_public" {
   resource_group_name = var.resource_group_name
   route_table_name    = azurerm_route_table.rt_bastion.name
   address_prefix      = "10.0.0.0/24"  # Public subnet
-  next_hop_type       = "VnetLocal"
-}
-
-# Route for LAN to bastion subnet - Direct communication
-resource "azurerm_route" "route_lan_to_bastion" {
-  name                = "route-lan-to-bastion"
-  resource_group_name = var.resource_group_name
-  route_table_name    = azurerm_route_table.rt_lan.name
-  address_prefix      = "10.0.3.0/24"  # Bastion subnet
   next_hop_type       = "VnetLocal"
 }
 

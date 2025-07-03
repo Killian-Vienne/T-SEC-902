@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Définition des styles -->
+    <style>
+      .subnet { fill: #f0f8ff; stroke: #4169e1; stroke-width: 2; stroke-dasharray: 5,5; }
+      .public-subnet { fill: #fff0f5; stroke: #ff1493; stroke-width: 2; stroke-dasharray: 5,5; }
+      .bastion-subnet { fill: #f0fff0; stroke: #32cd32; stroke-width: 2; stroke-dasharray: 5,5; }
+      .server { fill: #ffffff; stroke: #333333; stroke-width: 2; }
+      .firewall { fill: #ffb6c1; stroke: #dc143c; stroke-width: 3; }
+      .bastion { fill: #90ee90; stroke: #006400; stroke-width: 2; }
+      .web-server { fill: #87ceeb; stroke: #4682b4; stroke-width: 2; }
+      .db-server { fill: #dda0dd; stroke: #8b008b; stroke-width: 2; }
+      .monitoring { fill: #ffd700; stroke: #ff8c00; stroke-width: 2; }
+      .connection { stroke: #333333; stroke-width: 2; fill: none; }
+      .wan-connection { stroke: #ff4500; stroke-width: 3; fill: none; }
+      .internet-connection { stroke: #0000ff; stroke-width: 4; fill: none; }
+      .text-title { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #333333; }
+      .text-subtitle { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; fill: #666666; }
+      .text-small { font-family: Arial, sans-serif; font-size: 10px; fill: #333333; }
+      .text-ip { font-family: Arial, sans-serif; font-size: 9px; fill: #0066cc; font-weight: bold; }
+    </style>
+
+    <!-- Définition des marqueurs pour les flèches -->
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#333333" />
+      </marker>
+      <marker id="arrowhead-wan" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#ff4500" />
+      </marker>
+      <marker id="arrowhead-internet" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#0000ff" />
+      </marker>
+    </defs>
+  </defs>
+
+  <!-- Titre principal -->
+  <text x="600" y="30" text-anchor="middle" class="text-title">Schéma Réseau Infrastructure Azure - pfSense Gateway</text>
+  <text x="600" y="50" text-anchor="middle" class="text-subtitle">VNet Azure: 10.0.0.0/16</text>
+
+  <!-- Internet Cloud -->
+  <ellipse cx="600" cy="100" rx="80" ry="30" fill="#87ceeb" stroke="#4682b4" stroke-width="2"/>
+  <text x="600" y="105" text-anchor="middle" class="text-title">🌐 Internet</text>
+
+  <!-- VNet principal -->
+  <rect x="50" y="150" width="1100" height="580" fill="#f8f8ff" stroke="#483d8b" stroke-width="3" stroke-dasharray="10,5"/>
+  <text x="70" y="175" class="text-title">Azure VNet: 10.0.0.0/16</text>
+
+  <!-- Subnet Public (WAN) -->
+  <rect x="80" y="200" width="300" height="200" class="public-subnet"/>
+  <text x="90" y="220" class="text-subtitle">Subnet Public (WAN)</text>
+  <text x="90" y="235" class="text-small">10.0.0.0/24</text>
+
+  <!-- pfSense WAN Interface -->
+  <rect x="150" y="260" width="120" height="80" class="firewall"/>
+  <text x="210" y="285" text-anchor="middle" class="text-small">🔥 pfSense</text>
+  <text x="210" y="300" text-anchor="middle" class="text-small">WAN Interface</text>
+  <text x="210" y="315" text-anchor="middle" class="text-ip">10.0.0.4</text>
+  <text x="210" y="330" text-anchor="middle" class="text-ip">+ IP Publique</text>
+
+  <!-- Subnet LAN -->
+  <rect x="450" y="200" width="350" height="500" class="subnet"/>
+  <text x="460" y="220" class="text-subtitle">Subnet LAN</text>
+  <text x="460" y="235" class="text-small">10.0.1.0/24</text>
+
+  <!-- pfSense LAN Interface -->
+  <rect x="480" y="260" width="120" height="80" class="firewall"/>
+  <text x="540" y="285" text-anchor="middle" class="text-small">🔥 pfSense</text>
+  <text x="540" y="300" text-anchor="middle" class="text-small">LAN Interface</text>
+  <text x="540" y="315" text-anchor="middle" class="text-ip">10.0.1.4</text>
+  <text x="540" y="330" text-anchor="middle" class="text-small">(Gateway)</text>
+
+  <!-- GLPI Database -->
+  <rect x="480" y="380" width="120" height="80" class="db-server"/>
+  <text x="540" y="405" text-anchor="middle" class="text-small">🗄️ GLPI DB</text>
+  <text x="540" y="420" text-anchor="middle" class="text-small">MySQL</text>
+  <text x="540" y="435" text-anchor="middle" class="text-ip">10.0.1.10</text>
+  <text x="540" y="450" text-anchor="middle" class="text-small">Port: 3306</text>
+
+  <!-- GLPI Web Server -->
+  <rect x="650" y="380" width="120" height="80" class="web-server"/>
+  <text x="710" y="405" text-anchor="middle" class="text-small">🌐 GLPI Web</text>
+  <text x="710" y="420" text-anchor="middle" class="text-small">Apache/Nginx</text>
+  <text x="710" y="435" text-anchor="middle" class="text-ip">10.0.1.20</text>
+  <text x="710" y="450" text-anchor="middle" class="text-small">Ports: 80,443</text>
+
+  <!-- Wazuh Server -->
+  <rect x="480" y="500" width="120" height="80" class="monitoring"/>
+  <text x="540" y="525" text-anchor="middle" class="text-small">👁️ Wazuh</text>
+  <text x="540" y="540" text-anchor="middle" class="text-small">SIEM/Monitor</text>
+  <text x="540" y="555" text-anchor="middle" class="text-ip">10.0.1.30</text>
+  <text x="540" y="570" text-anchor="middle" class="text-small">1514,1515,55000</text>
+
+  <!-- Subnet Bastion -->
+  <rect x="850" y="200" width="250" height="200" class="bastion-subnet"/>
+  <text x="860" y="220" class="text-subtitle">Subnet Bastion</text>
+  <text x="860" y="235" class="text-small">10.0.3.0/24</text>
+
+  <!-- Bastion Host -->
+  <rect x="880" y="260" width="120" height="80" class="bastion"/>
+  <text x="940" y="285" text-anchor="middle" class="text-small">🏰 Bastion</text>
+  <text x="940" y="300" text-anchor="middle" class="text-small">Jump Host</text>
+  <text x="940" y="315" text-anchor="middle" class="text-ip">10.0.3.10</text>
+  <text x="940" y="330" text-anchor="middle" class="text-ip">+ IP Publique</text>
+
+  <!-- Connexions Internet -->
+  <line x1="600" y1="130" x2="210" y2="260" class="internet-connection" marker-end="url(#arrowhead-internet)"/>
+  <line x1="600" y1="130" x2="940" y2="260" class="internet-connection" marker-end="url(#arrowhead-internet)"/>
+
+  <!-- Connexion WAN-LAN pfSense -->
+  <line x1="270" y1="300" x2="480" y2="300" class="wan-connection" marker-end="url(#arrowhead-wan)"/>
+
+  <!-- Connexions internes LAN -->
+  <line x1="540" y1="340" x2="540" y2="380" class="connection" marker-end="url(#arrowhead)"/>
+  <line x1="600" y1="420" x2="650" y2="420" class="connection" marker-end="url(#arrowhead)"/>
+  <line x1="540" y1="340" x2="540" y2="500" class="connection" marker-end="url(#arrowhead)"/>
+
+  <!-- Connexions depuis Bastion -->
+  <line x1="880" y1="300" x2="600" y2="300" class="connection" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+  <line x1="940" y1="340" x2="710" y2="380" class="connection" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+  <line x1="940" y1="340" x2="540" y2="380" class="connection" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+  <line x1="940" y1="340" x2="540" y2="500" class="connection" marker-end="url(#arrowhead)" stroke-dasharray="3,3"/>
+
+  <!-- Légende -->
+  <rect x="80" y="450" width="300" height="220" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+  <text x="90" y="470" class="text-subtitle">🔧 Légende</text>
+
+  <!-- Éléments de légende -->
+  <rect x="90" y="480" width="20" height="15" class="firewall"/>
+  <text x="120" y="492" class="text-small">pfSense Firewall/Router</text>
+
+  <rect x="90" y="500" width="20" height="15" class="bastion"/>
+  <text x="120" y="512" class="text-small">Bastion Host (SSH Jump)</text>
+
+  <rect x="90" y="520" width="20" height="15" class="web-server"/>
+  <text x="120" y="532" class="text-small">Serveur Web GLPI</text>
+
+  <rect x="90" y="540" width="20" height="15" class="db-server"/>
+  <text x="120" y="552" class="text-small">Base de données MySQL</text>
+
+  <rect x="90" y="560" width="20" height="15" class="monitoring"/>
+  <text x="120" y="572" class="text-small">Wazuh SIEM/Monitoring</text>
+
+  <line x1="90" y1="585" x2="110" y2="585" class="internet-connection"/>
+  <text x="120" y="590" class="text-small">Connexion Internet</text>
+
+  <line x1="90" y1="605" x2="110" y2="605" class="wan-connection"/>
+  <text x="120" y="610" class="text-small">Trafic WAN-LAN</text>
+
+  <line x1="90" y1="625" x2="110" y2="625" class="connection"/>
+  <text x="120" y="630" class="text-small">Trafic interne</text>
+
+  <line x1="90" y1="645" x2="110" y2="645" class="connection" stroke-dasharray="3,3"/>
+  <text x="120" y="650" class="text-small">Accès SSH via Bastion</text>
+
+  <!-- Informations de routage -->
+  <rect x="850" y="450" width="250" height="220" fill="#ffffff" stroke="#333333" stroke-width="2"/>
+  <text x="860" y="470" class="text-subtitle">📋 Routage Principal</text>
+
+  <text x="860" y="490" class="text-small">🔹 LAN → Tout trafic via pfSense</text>
+  <text x="860" y="505" class="text-small">   0.0.0.0/0 → 10.0.1.4</text>
+
+  <text x="860" y="525" class="text-small">🔹 Bastion → Internet direct</text>
+  <text x="860" y="540" class="text-small">   0.0.0.0/0 → Internet</text>
+
+  <text x="860" y="560" class="text-small">🔹 Public → Internet direct</text>
+  <text x="860" y="575" class="text-small">   0.0.0.0/0 → Internet</text>
+
+  <text x="860" y="595" class="text-small">🔹 Sécurité:</text>
+  <text x="860" y="610" class="text-small">   - NSGs permissifs</text>
+  <text x="860" y="625" class="text-small">   - pfSense = point contrôle</text>
+  <text x="860" y="640" class="text-small">   - SSH uniquement via Bastion</text>
+  <text x="860" y="655" class="text-small">   - Monitoring Wazuh centralisé</text>
+
+  <!-- Flèches de direction du trafic -->
+  <text x="400" y="190" class="text-small" fill="#ff4500">Trafic WAN ←→ LAN</text>
+  <text x="700" y="250" class="text-small" fill="#0000ff">Internet ↓</text>
+  <text x="950" y="370" class="text-small" fill="#006400">SSH ↓</text>
+</svg>
