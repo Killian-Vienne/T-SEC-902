@@ -2,8 +2,9 @@
 # This script establishes direct SSH connections to internal VMs
 # from your local machine through the bastion host
 
-BASTION_IP="20.232.136.151"
+BASTION_IP="4.246.157.22"
 BASTION_USER="adminuser"
+BASTION_PORT="2222"  # Le bastion écoute sur le port 2222
 
 # Default SSH user for internal VMs
 VM_USER="adminuser"
@@ -12,11 +13,11 @@ function show_help {
   echo "Usage: $0 [target] [ssh_key_path] [custom_command]"
   echo ""
   echo "Available targets:"
-  echo "  bastion    - Direct connection to the bastion host"
-  echo "  pfsense    - pfSense firewall (default user: admin)"
-  echo "  wazuh      - Wazuh security server"
-  echo "  glpi-web   - GLPI web application server"
-  echo "  glpi-db    - GLPI database server"
+  echo "  bastion    - Direct connection to the bastion host (port 2222)"
+  echo "  pfsense    - pfSense firewall (default user: admin, via bastion)"
+  echo "  wazuh      - Wazuh security server (via bastion, port 2222)"
+  echo "  glpi-web   - GLPI web application server (via bastion, port 2222)"
+  echo "  glpi-db    - GLPI database server (via bastion, port 2222)"
   echo ""
   echo "Examples:"
   echo "  $0 pfsense                    - Connect to pfSense through bastion"
@@ -53,21 +54,25 @@ fi
 
 case $TARGET in
   bastion)
-    echo "Connecting directly to bastion host..."
-    ssh $SSH_EXEC $KEY_OPTION $BASTION_USER@$BASTION_IP $CUSTOM_COMMAND
+    echo "Connecting directly to bastion host (port 2222)..."
+    ssh $SSH_EXEC -p $BASTION_PORT $KEY_OPTION $BASTION_USER@$BASTION_IP $CUSTOM_COMMAND
     exit 0
     ;;
   pfsense)
     TARGET_HOST="10.0.0.4"  # pfSense WAN interface
+    TARGET_PORT="22"  # pfSense écoute sur le port 22
     ;;
   wazuh)
     TARGET_HOST="10.0.1.30"
+    TARGET_PORT="2222"  # Wazuh écoute sur le port 2222
     ;;
   glpi-web)
     TARGET_HOST="10.0.1.20"
+    TARGET_PORT="2222"  # GLPI Web écoute sur le port 2222
     ;;
   glpi-db)
     TARGET_HOST="10.0.1.10"
+    TARGET_PORT="2222"  # GLPI DB écoute sur le port 2222
     ;;
   *)
     echo "Unknown target: $TARGET"
@@ -77,11 +82,12 @@ case $TARGET in
 esac
 
 echo "Connecting to $TARGET ($TARGET_HOST) via bastion..."
+echo "Bastion port: $BASTION_PORT, Target port: $TARGET_PORT"
 
 if [ -z "$CUSTOM_COMMAND" ]; then
   # Interactive SSH session through the bastion
-  ssh -J $BASTION_USER@$BASTION_IP $KEY_OPTION $VM_USER@$TARGET_HOST
+  ssh -J $BASTION_USER@$BASTION_IP:$BASTION_PORT -p $TARGET_PORT $KEY_OPTION $VM_USER@$TARGET_HOST
 else
   # Run specific command on the target machine
-  ssh -J $BASTION_USER@$BASTION_IP $SSH_EXEC $KEY_OPTION $VM_USER@$TARGET_HOST "$CUSTOM_COMMAND"
+  ssh -J $BASTION_USER@$BASTION_IP:$BASTION_PORT -p $TARGET_PORT $SSH_EXEC $KEY_OPTION $VM_USER@$TARGET_HOST "$CUSTOM_COMMAND"
 fi

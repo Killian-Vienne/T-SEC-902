@@ -2,8 +2,9 @@
 # This script establishes a secure tunnel to internal services
 # from your local machine through the bastion host
 
-BASTION_IP="20.232.136.151"
+BASTION_IP="4.246.157.22"
 BASTION_USER="adminuser"
+BASTION_PORT="2222"  # Le bastion écoute sur le port 2222
 
 function show_help {
   echo "Usage: $0 [service] [local_port] [ssh_key_path]"
@@ -61,4 +62,5 @@ echo "Once connected, access the service at: $PROTOCOL://localhost:$LOCAL_PORT"
 echo "Press Ctrl+C to close the connection"
 
 # Create SSH tunnel through bastion to the target service
-ssh -N -L $LOCAL_PORT:$TARGET_HOST:$TARGET_PORT $KEY_OPTION $BASTION_USER@$BASTION_IP
+# Le bastion écoute sur le port 2222, mais les services internes peuvent avoir des ports SSH différents
+ssh -N -L $LOCAL_PORT:$TARGET_HOST:$TARGET_PORT -p $BASTION_PORT $KEY_OPTION $BASTION_USER@$BASTION_IP

@@ -54,9 +54,5 @@ output "access_instructions" {
        ssh -L 8080:10.0.1.20:80 ${var.admin_username}@${module.networking.bastion_public_ip_address}
        Access the GLPI web interface at: http://localhost:8080
 
-    ## Wazuh Dashboard
-    1. From your local machine, create an SSH tunnel:
-       ssh -L 8444:10.0.1.30:443 ${var.admin_username}@${module.networking.bastion_public_ip_address}
-    2. Access the Wazuh dashboard at: https://localhost:8444
   EOT
 }

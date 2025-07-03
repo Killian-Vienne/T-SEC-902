@@ -94,3 +94,13 @@ or
 ```sh
 rm terraform.tfstate
 ```
+
+## Lynis
+
+### Security fails
+
+- Accept SSH connection only bu auth key
+- EOL of ubunt distrib selected (20.04) instead of Ubuntu 22.04 LTS by example
+- Set Boot Loader Password
+- Asked a password for all sudo command executed
+- Install ClamAV, free antivirus
