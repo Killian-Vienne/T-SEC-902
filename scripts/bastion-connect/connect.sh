@@ -14,7 +14,7 @@ function show_help {
   echo "  wazuh       - Wazuh web interface (HTTPS)"
   echo "  glpi        - GLPI web interface (HTTP)"
   echo ""
-  echo "Example: $0 pfsense 8443 ~/.ssh/id_rsa"
+  echo "Example: $0 pfsense 8443 ~/.ssh/azure-ssh"
   echo "         $0 glpi 8080"
 }
 
